@@ -8,7 +8,7 @@ from paper_trail.ingest.chunker import chunk_blocks
 from paper_trail.ingest.embedder import get_embedder
 from paper_trail.ingest.pdf_parser import parse_pdf
 from paper_trail.query.agent import answer
-from paper_trail.store.qdrant import Store
+from paper_trail.store.lance import Store
 
 console = Console()
 EMBED_BATCH = 64

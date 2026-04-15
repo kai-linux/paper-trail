@@ -6,7 +6,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
 authors = [{ name = "Kai Libicher" }]
-keywords = ["rag", "research", "papers", "pdf", "qdrant", "pydantic-ai", "anthropic"]
+keywords = ["rag", "research", "papers", "pdf", "lancedb", "pydantic-ai", "anthropic"]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "License :: OSI Approved :: MIT License",
@@ -18,7 +18,8 @@ classifiers = [
 
 dependencies = [
     "pydantic-ai>=0.2.0",
-    "qdrant-client>=1.12.0",
+    "lancedb>=0.13.0",
+    "pyarrow>=15.0.0",
     "pymupdf>=1.25.0",
     "anthropic>=0.40.0",
     "voyageai>=0.3.0",

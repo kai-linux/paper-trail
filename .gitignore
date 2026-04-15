@@ -35,7 +35,10 @@ htmlcov/
 !.env.example
 
 # Local data
-qdrant_storage/
+paper-trail-data/
 data/
+pdfs/*
+!pdfs/.gitkeep
+!pdfs/README.md
 *.pdf
 !examples/**/*.pdf

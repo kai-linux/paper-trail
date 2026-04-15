@@ -7,7 +7,7 @@ Ingest PDFs → smart section-aware chunking → vector store → ask questions,
 ## Stack
 
 - **[PydanticAI](https://ai.pydantic.dev/)** — agent framework
-- **[Qdrant](https://qdrant.tech/)** — vector store
+- **[LanceDB](https://lancedb.com/)** — embedded vector store (no server, just a folder)
 - **[Anthropic API](https://docs.anthropic.com/)** — LLM (Claude)
 - **[PyMuPDF](https://pymupdf.readthedocs.io/)** — PDF parsing
 - **[Voyage AI](https://www.voyageai.com/)** or OpenAI — embeddings (configurable)
@@ -19,7 +19,7 @@ PDF
  └─► pdf_parser   extract text + detect sections (abstract, methods, …)
  └─► chunker      section-aware splits, ~500 tokens, 50-token overlap
  └─► embedder     voyage-3-large or text-embedding-3-small
- └─► qdrant       upsert with metadata (paper_id, section, page, chunk_index)
+ └─► lancedb      upsert with metadata (paper_id, section, page, chunk_index)
 
 Question
  └─► embed → vector search → (optional rerank) → PydanticAI agent
@@ -33,25 +33,27 @@ Every chunk stores `paper_id`, `page_number`, `section_name`, and `chunk_index`.
 > Status: scaffolding in progress. See [BUILD_SPEC.md](./BUILD_SPEC.md) for the full design.
 
 ```bash
-# Run Qdrant locally
-docker run -p 6333:6333 qdrant/qdrant
-
-# Install
+# Install (creates a venv and installs from pyproject)
 uv sync
 
-# Ingest a paper
+# Configure keys (Anthropic + Voyage by default)
+cp .env.example .env && $EDITOR .env
+
+# Ingest one or more papers
 paper-trail ingest path/to/paper.pdf
 
-# Ask a question
+# Ask a question across the library
 paper-trail query "what is the chunking strategy used in RAPTOR?"
 ```
+
+LanceDB is embedded — no Docker, no server. The library lives in `./paper-trail-data/` (override via `PAPER_TRAIL_DB_PATH`).
 
 ## Project layout
 
 ```
 paper_trail/
 ├── ingest/      pdf_parser, chunker, embedder
-├── store/       qdrant client wrapper
+├── store/       LanceDB wrapper (embedded vector store)
 ├── query/       retriever + PydanticAI agent
 ├── models.py    Paper, Chunk, Citation
 └── cli.py

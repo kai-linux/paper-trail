@@ -5,7 +5,7 @@ from pydantic_ai import Agent, RunContext
 
 from paper_trail.ingest.embedder import Embedder, get_embedder
 from paper_trail.query.retriever import retrieve
-from paper_trail.store.qdrant import Store
+from paper_trail.store.lance import Store
 
 DEFAULT_MODEL = os.getenv("PAPER_TRAIL_MODEL", "anthropic:claude-sonnet-4-5")
 

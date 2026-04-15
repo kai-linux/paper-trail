@@ -6,7 +6,7 @@ Ingest research papers (PDFs), chunk them intelligently (respecting sections, fi
 
 ## Stack
 
-PydanticAI + Qdrant + Anthropic API + PyMuPDF
+PydanticAI + LanceDB (embedded) + Anthropic API + PyMuPDF
 
 ## Architecture
 
@@ -21,7 +21,7 @@ paper-trail/
 │   │   └── embedder.py        # Text -> vectors via Anthropic/OpenAI
 │   ├── store/
 │   │   ├── __init__.py
-│   │   └── qdrant.py          # Qdrant client wrapper
+│   │   └── lance.py           # LanceDB wrapper (embedded, no server)
 │   ├── query/
 │   │   ├── __init__.py
 │   │   ├── retriever.py       # Vector search + reranking
@@ -43,11 +43,11 @@ PDF upload
   -> pdf_parser.py: extract text, detect sections (abstract, intro, methods, etc.)
   -> chunker.py: split into chunks (~500 tokens), respect section boundaries
   -> embedder.py: generate embeddings (voyage-3 or text-embedding-3-small)
-  -> qdrant.py: upsert vectors with metadata (paper_id, section, page, chunk_index)
+  -> lance.py: upsert vectors with metadata (paper_id, section, page, chunk_index)
 
 Query
   -> embedder.py: embed the question
-  -> retriever.py: vector search in Qdrant, top-k chunks
+  -> retriever.py: vector search in LanceDB, top-k chunks
   -> (optional) reranker: cross-encoder reranking for precision
   -> agent.py: PydanticAI agent synthesizes answer from chunks
   -> response includes citations: [Paper Title, p.12, Section 3.2]
@@ -58,9 +58,9 @@ Query
 - **PDF parsing:** pymupdf (fitz) for text extraction, with fallback to marker or nougat for scanned/complex papers
 - **Chunking strategy:** Section-aware recursive splitting. Don't break mid-sentence. Keep section headers attached to chunks. Overlap of ~50 tokens between chunks.
 - **Embedding model:** `voyage-3-large` (best for retrieval) or `text-embedding-3-small` (cheaper, OpenAI). Make it configurable.
-- **Qdrant:** Run locally via Docker (`docker run -p 6333:6333 qdrant/qdrant`) or use Qdrant Cloud for prod.
+- **Vector store:** LanceDB, embedded — the library is just a folder on disk (`./paper-trail-data/`). No Docker, no server. Aligned with the local-first strategy.
 - **Citation format:** Every chunk stores `paper_id`, `page_number`, `section_name`, `chunk_index`. The agent's system prompt enforces citation in responses.
-- **Collection strategy:** Single collection with `paper_id` payload filter for multi-paper queries.
+- **Table strategy:** Single `papers` table with `paper_id` filter for multi-paper queries.
 
 ## Pydantic models (core)
 
@@ -108,7 +108,8 @@ When answering questions:
 ```toml
 dependencies = [
     "pydantic-ai>=0.2.0",
-    "qdrant-client>=1.12.0",
+    "lancedb>=0.13.0",
+    "pyarrow>=15.0.0",
     "pymupdf>=1.25.0",
     "anthropic>=0.40.0",
     "voyageai>=0.3.0",         # optional: voyage embeddings
@@ -122,7 +123,7 @@ dependencies = [
 1. **models.py** - Pydantic models for Paper, Chunk, Citation
 2. **pdf_parser.py** - Extract structured text from PDFs (sections, pages)
 3. **chunker.py** - Section-aware chunking with overlap
-4. **qdrant.py** - Qdrant client: create collection, upsert, search
+4. **lance.py** - LanceDB wrapper: create table, upsert, search
 5. **embedder.py** - Embedding wrapper (configurable provider)
 6. **retriever.py** - Search + optional reranking
 7. **agent.py** - PydanticAI agent with search_papers tool
