@@ -1,0 +1,44 @@
+[project]
+name = "paper-trail"
+version = "0.0.1"
+description = "Conversational Q&A over research papers, with citations back to page and section."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+authors = [{ name = "Kai Libicher" }]
+keywords = ["rag", "research", "papers", "pdf", "qdrant", "pydantic-ai", "anthropic"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+
+dependencies = [
+    "pydantic-ai>=0.2.0",
+    "qdrant-client>=1.12.0",
+    "pymupdf>=1.25.0",
+    "anthropic>=0.40.0",
+    "voyageai>=0.3.0",
+    "rich>=13.0.0",
+    "click>=8.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.6.0",
+]
+
+[project.scripts]
+paper-trail = "paper_trail.cli:main"
+
+[project.urls]
+Repository = "https://github.com/kai-linux/paper-trail"
+Issues = "https://github.com/kai-linux/paper-trail/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
