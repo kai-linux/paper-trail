@@ -1,0 +1,66 @@
+{
+  "description": "Example QA set targeting the four arXiv papers listed in pdfs/README.md.",
+  "questions": [
+    {
+      "id": "attn-1",
+      "question": "What is the formula for scaled dot-product attention?",
+      "expected_paper_keywords": ["attention"],
+      "expected_section_keywords": ["attention", "method"]
+    },
+    {
+      "id": "attn-2",
+      "question": "Why does the Transformer use multi-head attention instead of a single attention head?",
+      "expected_paper_keywords": ["attention"],
+      "expected_section_keywords": []
+    },
+    {
+      "id": "rag-1",
+      "question": "How does Retrieval-Augmented Generation combine a retriever with a generator?",
+      "expected_paper_keywords": ["retrieval-augmented", "rag"],
+      "expected_section_keywords": []
+    },
+    {
+      "id": "rag-2",
+      "question": "What is the difference between RAG-Sequence and RAG-Token?",
+      "expected_paper_keywords": ["retrieval-augmented", "rag"],
+      "expected_section_keywords": []
+    },
+    {
+      "id": "raptor-1",
+      "question": "What clustering algorithm does RAPTOR use to build its tree?",
+      "expected_paper_keywords": ["raptor"],
+      "expected_section_keywords": []
+    },
+    {
+      "id": "raptor-2",
+      "question": "How does RAPTOR perform retrieval at query time?",
+      "expected_paper_keywords": ["raptor"],
+      "expected_section_keywords": []
+    },
+    {
+      "id": "lim-1",
+      "question": "What is the lost-in-the-middle effect when language models read long contexts?",
+      "expected_paper_keywords": ["lost in the middle", "long contexts"],
+      "expected_section_keywords": []
+    },
+    {
+      "id": "lim-2",
+      "question": "Where in a long input do current language models perform best?",
+      "expected_paper_keywords": ["lost in the middle", "long contexts"],
+      "expected_section_keywords": []
+    },
+    {
+      "id": "cross-1",
+      "question": "Compare RAPTOR's hierarchical retrieval to vanilla RAG.",
+      "expected_paper_keywords": ["raptor", "retrieval-augmented", "rag"],
+      "expected_section_keywords": []
+    },
+    {
+      "id": "neg-1",
+      "question": "What is the boiling point of mercury?",
+      "expected_paper_keywords": [],
+      "expected_section_keywords": [],
+      "expect_no_answer": true
+    }
+  ]
+}

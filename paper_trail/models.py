@@ -28,4 +28,9 @@ class Citation(BaseModel):
     paper_title: str
     section: str
     page_number: int
-    relevant_text: str
+    relevant_text: str = ""
+
+
+class Answer(BaseModel):
+    text: str
+    citations: list[Citation] = []

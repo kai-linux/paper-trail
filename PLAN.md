@@ -2,30 +2,33 @@
 
 Phased execution plan to take paper-trail from spec to launched OSS project. See [NORTH_STAR.md](./NORTH_STAR.md) for the goal and [STRATEGY.md](./STRATEGY.md) for the bets behind it.
 
-## Phase 1 — Functional MVP
+## Phase 1 — Functional MVP — DONE
 
 **Goal:** `paper-trail ingest *.pdf && paper-trail query "..."` returns answers with real citations.
 
 Build order (per `BUILD_SPEC.md`):
 
-1. `models.py` — Paper, Chunk, Citation
-2. `ingest/pdf_parser.py` — PyMuPDF, section detection
-3. `ingest/chunker.py` — section-aware, ~500 tok, 50 tok overlap
-4. `store/qdrant.py` — collection + upsert + filtered search
-5. `ingest/embedder.py` — voyage-3 default, OpenAI fallback (env-driven)
-6. `query/retriever.py` — top-k search (rerank deferred)
-7. `query/agent.py` — PydanticAI agent with citation-enforcing system prompt
-8. `cli.py` — `ingest`, `query`, `list`
-9. Smoke test on 3–5 open-access papers (arXiv)
+1. ✓ `models.py` — Paper, Chunk, Citation, Answer
+2. ✓ `ingest/pdf_parser.py` — PyMuPDF, regex + font-size heading detection
+3. ✓ `ingest/chunker.py` — section-aware, ~500 tok, 50 tok overlap
+4. ✓ `store/lance.py` — embedded LanceDB (chunks + papers tables)
+5. ✓ `ingest/embedder.py` — voyage-3 default, OpenAI fallback (env-driven)
+6. ✓ `query/retriever.py` — top-k search
+7. ✓ `query/agent.py` — PydanticAI agent with structured `Answer` output
+8. ✓ `cli.py` — `ingest`, `query`, `list`, `delete`
+9. ⏳ Smoke test on 3–5 open-access papers — pending API keys
 
-**Done =** end-to-end happy path works on real PDFs and citations resolve to the correct page + section.
+**Caveat:** end-to-end smoke test against real PDFs is gated on Anthropic + Voyage keys. Static review of all modules complete, chunker + parser + store unit tests passing.
 
-## Phase 2 — Credibility
+## Phase 2 — Credibility — DONE (modulo a key-gated run)
 
-- **Eval harness**: 10–20 question QA set over the sample corpus; publish retrieval precision@k and citation accuracy in the README. Numbers > vibes.
-- **Sample corpus + bootstrap**: `make demo` ingests a curated set (Attention Is All You Need, RAG, RAPTOR, …); first-run experience is 60s.
-- **Docker compose**: Qdrant + paper-trail, single `docker compose up`.
-- **Tests**: parser/chunker/retriever unit tests + one e2e.
+- ✓ **Eval harness** (`eval/run.py`) — loads a JSON QA set, runs each question through the retriever and the agent, reports retrieval hit-rate + citation hit-rate + refusal rate on negative questions. Writes raw JSON for further analysis.
+- ✓ **Sample QA set** (`eval/qa_set.example.json`) — 10 questions over the four well-known papers in `pdfs/README.md`, including a negative ("expected refusal") case.
+- ✓ **Bootstrap**: `make demo` curls the four sample PDFs and ingests them. `make eval` runs the harness. `make test` runs unit tests.
+- ✓ **Tests**: chunker + pdf_parser + LanceDB roundtrip unit tests (no API keys required).
+- ~~Docker compose~~ — no longer needed; LanceDB is embedded.
+
+**Caveat:** the eval harness is built and ready, but actually running it requires API keys + an ingested library. Once keys are in, `make demo && make eval` produces the numbers we want to publish.
 
 ## Phase 3 — Visibility surface
 
@@ -33,11 +36,11 @@ Build order (per `BUILD_SPEC.md`):
 - **VHS-recorded terminal demo** in the README.
 - **MCP server** wrapper exposing `search_papers` as an MCP tool, with Claude Desktop config snippet. Strategic distribution play.
 - **PyPI release** + **GitHub Actions** (lint, test, build).
-- GitHub topics: `rag`, `pydantic-ai`, `qdrant`, `mcp`, `research-papers`, `claude`.
+- GitHub topics: `rag`, `pydantic-ai`, `lancedb`, `mcp`, `research-papers`, `claude`.
 
 ## Phase 4 — Launch
 
-- Blog post: *"Why your RAG is lying to you — enforcing citation faithfulness in PydanticAI."*
+- Blog post: *"Why your RAG is lying to you — enforcing citation faithfulness in PydanticAI."* Include eval numbers.
 - Show HN + r/LocalLLaMA + r/MachineLearning, lead with the demo gif.
 - Submit to `awesome-mcp-servers` and PydanticAI's example list.
 
