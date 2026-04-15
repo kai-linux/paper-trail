@@ -1,5 +1,9 @@
 # paper-trail
 
+[![ci](https://github.com/kai-linux/paper-trail/actions/workflows/ci.yml/badge.svg)](https://github.com/kai-linux/paper-trail/actions/workflows/ci.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
+
 Conversational Q&A over your research paper library, with citations that point back to the exact paper, page, and section.
 
 Ingest PDFs → smart section-aware chunking → vector store → ask questions, get answers grounded in the source material.

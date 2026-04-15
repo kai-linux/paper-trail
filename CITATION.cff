@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: paper-trail
+message: "If you use paper-trail in academic work, please cite it as below."
+type: software
+authors:
+  - family-names: Libicher
+    given-names: Kai
+    alias: kai-linux
+repository-code: "https://github.com/kai-linux/paper-trail"
+url: "https://github.com/kai-linux/paper-trail"
+abstract: >-
+  Conversational Q&A over a personal library of research papers, with
+  citations that point back to the exact PDF page and section. Built on
+  PydanticAI, LanceDB, and Anthropic Claude. Local-first, open source.
+keywords:
+  - retrieval-augmented generation
+  - vector search
+  - research papers
+  - citation faithfulness
+  - LanceDB
+  - PydanticAI
+license: MIT

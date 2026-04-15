@@ -1,5 +1,5 @@
 import os
-from datetime import UTC, datetime
+from datetime import UTC
 from pathlib import Path
 
 import lancedb
